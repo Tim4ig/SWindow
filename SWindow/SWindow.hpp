@@ -34,10 +34,10 @@ namespace SW {
 //---------------------------------------------------------------------------------------	
 		void		SetTitle(PCWSTR cwszWindowTitle);
 		void		SetMode(Modes::Mode eMode);
+		void		SetClientSize(POINT size);
 //---------------------------------------------------------------------------------------
 		HWND		GetHWND() const ;
 		POINT		GetClientSize();
-		PCWSTR		GetTitle();
 		bool		IsActive() const;
 		bool		IsOpen() const;
 		bool		[[nodiscard]]IsResize();

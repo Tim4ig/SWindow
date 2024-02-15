@@ -9,11 +9,13 @@ namespace SW {
 	SWindow* SWindow::GetSWindowInstance()
 	{
 		if (!g_pSWindowInstance) g_pSWindowInstance = new SWindow;
-		if (!g_bIsExitCallBack) { g_bIsExitCallBack = true; atexit(ReleaseSWindowInstance); }
+		if (!g_bIsExitCallBack) { g_bIsExitCallBack = true;  }
 		return g_pSWindowInstance;
 	}
 	void SWindow::ReleaseSWindowInstance()
 	{
+		GetSWindowInstance()->m_bIsOpen = false;
+		if(GetSWindowInstance()->m_WindowThread.joinable())GetSWindowInstance()->m_WindowThread.detach();
 		delete g_pSWindowInstance;
 	}
 	/***************************************************************/
@@ -32,7 +34,7 @@ namespace SW {
 			this->m_hWnd = CreateWindowExW(
 				NULL,
 				wc.lpszClassName,
-				L"Window",
+				cwszWindowTitle,
 				WS_OVERLAPPEDWINDOW,
 				CW_USEDEFAULT, CW_USEDEFAULT,
 				CW_USEDEFAULT, CW_USEDEFAULT,
@@ -107,6 +109,12 @@ namespace SW {
 		else this->Show(SW_SHOWDEFAULT);
 	}
 
+	void SWindow::SetClientSize(POINT size)
+	{
+		if (size.x < 1 || size.y < 1) return;
+		SetWindowPos(this->m_hWnd, NULL, m_rWndPos.left, m_rWndPos.top, size.x, size.y, SWP_FRAMECHANGED);
+	}
+
 	HWND SWindow::GetHWND() const
 	{
 		return m_hWnd;
@@ -117,13 +125,6 @@ namespace SW {
 		RECT clientSize = { 0,0,0,0 };
 		if (this->m_hWnd) GetClientRect(this->m_hWnd, &clientSize);
 		return { clientSize.right - clientSize.left,clientSize.bottom - clientSize.top };
-	}
-
-	PCWSTR SWindow::GetTitle()
-	{
-		wchar_t str[32] = L"";
-		if (this->m_hWnd) GetWindowTextW(this->m_hWnd, str, 32);
-		return str;
 	}
 
 	bool SWindow::IsActive() const

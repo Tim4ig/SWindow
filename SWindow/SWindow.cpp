@@ -20,7 +20,7 @@ namespace SW {
 	}
 	/***************************************************************/
 
-	void SWindow::OpenAsync(PCWSTR cwszWindowTitle, int nCmdShow)
+	void SWindow::OpenAsync(PCWSTR cwszWindowTitle, POINT size, int nCmdShow)
 	{
 		m_WindowThread = std::thread([&]() {
 			WNDCLASSW wc;
@@ -37,7 +37,7 @@ namespace SW {
 				cwszWindowTitle,
 				WS_OVERLAPPEDWINDOW,
 				CW_USEDEFAULT, CW_USEDEFAULT,
-				CW_USEDEFAULT, CW_USEDEFAULT,
+				(size.x ? size.x : CW_USEDEFAULT), (size.y ? size.y : CW_USEDEFAULT),
 				NULL,
 				NULL,
 				wc.hInstance,
@@ -63,7 +63,7 @@ namespace SW {
 		while (!this->m_bIsOpen);
 
 		this->SetTitle(cwszWindowTitle);
-		this->Show(nCmdShow);
+		if(nCmdShow) this->Show(nCmdShow);
 
 		GetWindowRect(this->m_hWnd, &m_rWndPos);
 		m_unWndStyle = GetWindowLongPtrW(this->m_hWnd, GWL_STYLE);

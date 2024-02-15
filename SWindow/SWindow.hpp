@@ -29,7 +29,7 @@ namespace SW {
 		static SWindow*	GetSWindowInstance();
 		static void		ReleaseSWindowInstance();
 //---------------------------------------------------------------------------------------
-		void		OpenAsync(PCWSTR cwszWindowTitle, int nCmdShow = SW_SHOWDEFAULT);
+		void		OpenAsync(PCWSTR cwszWindowTitle, POINT size = {0,0}, int nCmdShow = SW_SHOWDEFAULT);
 		void		Show(int nCmdShow = SW_SHOWDEFAULT);
 //---------------------------------------------------------------------------------------	
 		void		SetTitle(PCWSTR cwszWindowTitle);

@@ -4,10 +4,12 @@
 namespace SW {
 
 	/***************************************************************/
+	bool g_bIsExitCallBack = false;
 	SWindow* g_pSWindowInstance = nullptr;
 	SWindow* SWindow::GetSWindowInstance()
 	{
 		if (!g_pSWindowInstance) g_pSWindowInstance = new SWindow;
+		if (!g_bIsExitCallBack) { g_bIsExitCallBack = true; atexit(ReleaseSWindowInstance); }
 		return g_pSWindowInstance;
 	}
 	void SWindow::ReleaseSWindowInstance()
@@ -71,6 +73,7 @@ namespace SW {
 
 	void SWindow::Show(int nCmdShow)
 	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		if(this->m_hWnd) ShowWindow(this->m_hWnd, nCmdShow);
 	}
 

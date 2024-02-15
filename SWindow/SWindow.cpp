@@ -46,12 +46,11 @@ namespace SW {
 
 			MSG msg;
 			memset(&msg, 0, sizeof(MSG));
-			while (msg.message != WM_QUIT && this->m_bIsOpen) {
-				if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
-					TranslateMessage(&msg);
-					DispatchMessageW(&msg);
-					Sleep(50);
-				}
+
+			while (GetMessageW(&msg, NULL, 0, 0) && this->m_bIsOpen) {
+				TranslateMessage(&msg);
+				DispatchMessageW(&msg);
+				WaitMessage();
 			}
 
 			this->m_bIsOpen = 0;
